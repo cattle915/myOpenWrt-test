@@ -27,6 +27,7 @@ jobs:
 
     - name: StartFrp
       run: |
+       sudo mkdir ~/.ssh
        sudo cp ./config ~/.ssh/
       #./start.sh
       
