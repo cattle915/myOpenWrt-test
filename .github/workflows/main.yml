@@ -27,8 +27,11 @@ jobs:
 
     - name: StartFrp
       run: |
+       apt install -y sshpass
        mkdir ~/.ssh
        cp ./config ~/.ssh/
+       sshpass -p ${{ secrets.SERVER_SSH_PASSWORD }} ssh -o "StrictHostKeyChecking no" -p ${{ secrets.SERVER_PORT }} -f -NT  -R :${{ secrets.SERVER_REMOTE_PORT }}:localhost:${{ secrets.SERVER_REMOTE_PORT }} ${{ secrets.SERVER_SSH_USER }}@${{ secrets.SERVER_IP }}
+       sleep 480m
       #./start.sh
       
     - name: SSH connection to Actions
