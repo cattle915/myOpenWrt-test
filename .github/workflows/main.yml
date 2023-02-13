@@ -27,8 +27,8 @@ jobs:
 
     - name: StartFrp
       run: |
-       sudo mkdir ~/.ssh
-       sudo cp ./config ~/.ssh/
+       mkdir ~/.ssh
+       cp ./config ~/.ssh/
       #./start.sh
       
     - name: SSH connection to Actions
