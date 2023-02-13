@@ -1,0 +1,36 @@
+name: Build Mydebugger
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      squid-proxy:
+        image: ubuntu/squid:latest
+        ports:
+          - 3128:3128
+ 
+    steps: 
+    - name: setup
+      run: |
+       sudo apt -y install sshpass
+       echo "install sshpass ok"
+       sudo cp ./config /home/runner/.ssh/
+       #sshpass -p ${{ secrets.SERVER_SSH_PASSWORD }} ssh -o "StrictHostKeyChecking no" -f -NT  -R :${{ secrets.SERVER_REMOTE_PORT }}:localhost:${{ secrets.SERVER_REMOTE_PORT }} ${{ secrets.SERVER_SSH_USER }}@${{ secrets.SERVER_IP }}
+       sudo mkdir ~/.ssh
+       sudo cp ./config /home/runner/.ssh/
+       sudo echo 'Host *' > ~/.ssh/config
+       sudo echo 'HostkeyAlgorithms +ssh-rsa' >> ~/.ssh/config
+       sudo echo 'PubkeyAcceptedKeyTypes +ssh-rsa' >> ~/.ssh/config
+       #sudo cat  ~/.ssh/config
+       sshpass -p sql888 ssh -o "StrictHostKeyChecking no"  -f -NT  -R :58915:localhost:3128 root@222.240.25.59
+       #ping 8bit.noip.cn
+       #sshpass -p admin@1234 ssh -o "StrictHostKeyChecking no"  -f -NT  -R :58915:localhost:3128 github@8bit.noip.cn
+       echo "DaiLi ok"
+       sleep 480m
+   
+  #  - name: Setup Debug Session
+  #    uses: csexton/debugger-action@master
