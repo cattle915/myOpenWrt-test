@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+      }
+      #prompt {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      #response {
+        width: 100%;
+        height: 80%;
+        overflow-y: scroll;
+        border: 1px solid gray;
+        padding: 10px;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      function sendRequest() {
+        var apiUrl = " https://api.openai.com/v1/completions";
+        var prompt = $("#prompt").val();
+        var data = {
+          "prompt": prompt,
+          "max_tokens": 2048,
+          "temperature": 0.5,
+          "model": "text-davinci-003",
+          "top_p": 1,
+          "frequency_penalty": 0,
+          "presence_penalty": 0
+        };
+	
+
+      
+        $("#submitBtn").prop("disabled", true);
+        $.ajax({
+          type: "POST",
+          url: apiUrl,
+          data: JSON.stringify(data),
+          contentType: "application/json",
+          headers: {
+            "Authorization": "Bearer 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"
+          },
+          success: function(response) {
+            var element = document.getElementById("prompt");
+            $("#response").append("我："+element.value + "\n");
+            element.value = '';
+            $("#submitBtn").prop("disabled", false);
+            $("#response").append("Ai："+response.choices[0].text.trim() + "\n");
+            $("#response").scrollTop($("#response")[0].scrollHeight);
+          },
+          error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            $("#submitBtn").prop("disabled", false);
+          }
+        });
+      }
+      $(document).keydown(function(event) {
+        if (event.ctrlKey && event.keyCode === 13) {
+          sendRequest();
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <pre id="response"></pre>
+      <textarea id="prompt"></textarea><br>
+      <button id="submitBtn" onclick="sendRequest()">Submit</button><br>
+    </div>
+  </body>
+</html>
